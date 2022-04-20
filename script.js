@@ -34,14 +34,16 @@ const renderMusicList = (conn) => {
     const item = musicItem.content.cloneNode(true);
     const songPlayBtn = item.querySelector('.song-play');
     item.querySelector('.song-name').innerHTML = song.url;
-    if (currentPlayingId === item.songId) {
+    if (currentPlayingId === song.songId) {
       songPlayBtn.disabled = true;
+      songPlayBtn.innerText = "Playing...";
     } else {
+      songPlayBtn.innerText = "Play";
       songPlayBtn.onclick = () => {
-        currentPlayingId = item.songId;
+        currentPlayingId = song.songId;
         conn.send({
           type: 'set-playing',
-          data: item.songId
+          data: song.songId
         })
         renderMusicList(conn);
       }
