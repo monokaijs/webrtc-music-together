@@ -8,6 +8,7 @@ let connectionStatusEl = document.querySelector("#connection-status");
 let currentMusicList = [];
 let currentPlayingId = '';
 let peerReady = false, peer = new Peer, peerId, peerConnected = false, peerConnection;
+let playerReady = false, player;
 
 peer.on('open', (id) => {
   // peer is now connected
@@ -26,6 +27,11 @@ peer.on('open', (id) => {
   }
 });
 
+const onSongChange = (songId) => {
+  playerReady = false;
+  player.loadVideoById(songId, 0);
+}
+
 const renderMusicList = (conn) => {
   const musicItem = document.querySelector("#list-music-item");
   const playlistEl = document.querySelector("#playlist");
@@ -40,6 +46,11 @@ const renderMusicList = (conn) => {
     } else {
       songPlayBtn.innerText = "Play";
       songPlayBtn.onclick = () => {
+        if (!playerReady) {
+          alert("Player is loading...");
+          return;
+        }
+        onSongChange(song.songId);
         currentPlayingId = song.songId;
         conn.send({
           type: 'set-playing',
@@ -72,7 +83,25 @@ const connectionHandler = (conn) => {
           break;
         case 'set-playing':
           currentPlayingId = packet.data;
+          onSongChange(currentPlayingId);
           renderMusicList(conn);
+          break;
+        case 'update-player-state':
+          if (player.getPlayerState() !== packet.data) {
+            switch (packet.data) {
+              case 0:
+                // ended
+                break;
+              case 1:
+                // playing
+                player.playVideo();
+                break;
+              default:
+                // paused
+                player.pauseVideo();
+                break;
+            }
+          }
           break;
       }
     });
