@@ -29,7 +29,7 @@ peer.on('open', (id) => {
 const renderMusicList = (conn) => {
   const musicItem = document.querySelector("#list-music-item");
   const playlistEl = document.querySelector("#playlist");
-  currentMusicList.innerHTML = '';
+  playlistEl.innerHTML = '';
   currentMusicList.forEach(song => {
     const item = musicItem.content.cloneNode(true);
     const songPlayBtn = item.querySelector('.song-play');
