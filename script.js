@@ -6,7 +6,7 @@ let peerIdEl = document.querySelector("#peerID");
 let errorEl = document.querySelector("#error-status");
 let connectionStatusEl = document.querySelector("#connection-status");
 let currentMusicList = [];
-let currentPlayingId = 0;
+let currentPlayingId = '';
 let peerReady = false, peer = new Peer, peerId, peerConnected = false, peerConnection;
 
 peer.on('open', (id) => {
@@ -26,13 +26,26 @@ peer.on('open', (id) => {
   }
 });
 
-const renderMusicList = () => {
+const renderMusicList = (conn) => {
   const musicItem = document.querySelector("#list-music-item");
   const playlistEl = document.querySelector("#playlist");
+  currentMusicList.innerHTML = '';
   currentMusicList.forEach(song => {
     const item = musicItem.content.cloneNode(true);
-    console.log(item);
+    const songPlayBtn = item.querySelector('.song-play');
     item.querySelector('.song-name').innerHTML = song.url;
+    if (currentPlayingId === item.songId) {
+      songPlayBtn.disabled = true;
+    } else {
+      songPlayBtn.onclick = () => {
+        currentPlayingId = item.songId;
+        conn.send({
+          type: 'set-playing',
+          data: item.songId
+        })
+        renderMusicList(conn);
+      }
+    }
     playlistEl.append(item);
   });
 }
@@ -53,7 +66,11 @@ const connectionHandler = (conn) => {
       switch (packet.type) {
         case 'sync-playlist':
           currentMusicList = packet.data;
-          renderMusicList();
+          renderMusicList(conn);
+          break;
+        case 'set-playing':
+          currentPlayingId = packet.data;
+          renderMusicList(conn);
           break;
       }
     });
@@ -67,7 +84,7 @@ const connectionHandler = (conn) => {
           type: 'sync-playlist',
           data: currentMusicList
         });
-        renderMusicList();
+        renderMusicList(conn);
         inputYouTubeUrl.value = '';
       }
     }
