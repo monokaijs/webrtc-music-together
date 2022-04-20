@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebRTC Music Player</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container mt-4">
+    <h1>WebRTC Music Player</h1>
+
+    <div class="row mt-4">
+      <div class="col-12 col-md-4">
+        <div class="connector mb-2">
+          <div class="client-info mb-4">
+            Your current PeerID is:<br/>
+            <div class="d-flex justify-content-between">
+              <span id="peerID" class="text-nowrap text-truncate">--</span>
+              <a href="#" id="copy-id">Copy</a>
+            </div>
+            Status: <span id="connection-status">Waiting.</span><br/>
+            Error: <span id="error-status">none</span>
+          </div>
+          <div class="d-flex">
+            <input class="form-control" id="other-id" type="text" placeholder="Other ID"/>
+            <button class="btn btn-primary ml-2" id="connect" disabled>Connect</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="d-flex add-music mb-2">
+          <input class="form-control" id="input-youtube-url" type="text" placeholder="YouTube URL..."/>
+          <button class="btn btn-primary ml-2" id="add-music-btn" disabled>Add</button>
+        </div>
+        <ul id="playlist" class="list-group">
+
+        </ul>
+      </div>
+    </div>
+  </div>
+  <template id="list-music-item">
+    <li class="d-flex justify-content-between list-group-item">
+      <div class="text-nowrap text-truncate song-name">
+        https://www.youtube.com/watch?v=-S4s97hsag8
+      </div>
+      <button class="btn btn-sm btn-outline-primary">
+        Play
+      </button>
+    </li>
+  </template>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="peer.min.js"></script>
+  <script src="utils.js"></script>
+  <script src="app.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
