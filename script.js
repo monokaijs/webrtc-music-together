@@ -28,8 +28,9 @@ peer.on('open', (id) => {
 });
 
 const onSongChange = (songId) => {
-  playerReady = false;
+  // player.stopVideo();
   player.loadVideoById(songId, 0);
+  player.playVideo();
 }
 
 const renderMusicList = (conn) => {
@@ -87,16 +88,18 @@ const connectionHandler = (conn) => {
           renderMusicList(conn);
           break;
         case 'update-player-state':
-          if (player.getPlayerState() !== packet.data) {
-            switch (packet.data) {
+          if (player.getPlayerState() !== packet.data.status) {
+            switch (packet.data.status) {
               case 0:
                 // ended
                 break;
               case 1:
                 // playing
+                player.seekTo(packet.data.currentTime);
                 player.playVideo();
+                // player.playVideo();
                 break;
-              default:
+              case 2:
                 // paused
                 player.pauseVideo();
                 break;

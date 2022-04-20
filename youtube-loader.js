@@ -20,7 +20,7 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
-  event.target.playVideo();
+  console.log(">>> Player ready");
   playerReady = true;
 }
 
@@ -31,8 +31,16 @@ function onPlayerStateChange(event) {
   if (peerConnected) {
     peerConnection.send({
       type: 'update-player-state',
-      data: event.data
-    })
+      data: {
+        status: event.data,
+        currentTime: player.getCurrentTime()
+      }
+    });
+    if (event.data === 3) {
+      setTimeout(() => {
+        player.playVideo();
+      }, 300);
+    }
   }
 }
 function stopVideo() {
